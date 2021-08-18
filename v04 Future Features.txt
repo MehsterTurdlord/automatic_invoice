@@ -1,0 +1,6 @@
+- [ ]  Ensure the format stays the same.
+- [ ]  Delete the Dhs and Fils
+- [ ]  Reduce the size of each cell.
+- [ ]  Ensure the invoice number is where it should be
+- [ ]  Ensure that it is always at least in 2 decimal places.
+- [ ]  Fix some errors in the asking section.
