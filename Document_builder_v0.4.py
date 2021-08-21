@@ -13,7 +13,7 @@ def get_invoice_number():
 
     I_doc.save('Invoice.docx')
     
-    print("Success ! Got Invoice #")
+    print("Success ! Got Invoice #.")
     return Invoice_No
 
 def set_invoice_number(Invoice_No):
@@ -25,7 +25,7 @@ def set_invoice_number(Invoice_No):
     I_doc.paragraphs[0].text = str(Invoice_No + 1)
 
     I_doc.save('Invoice.docx')
-    print("Success ! Set Invoice #")
+    print("Success ! Set Invoice #.")
     
 
 def main():
@@ -36,12 +36,12 @@ def main():
     
     # Collecting
     if C_asked is False:
-        C_Name = str(input('What is the CUSTOMER\'S COMPANY NAME '))
+        C_Name = str(input('What is the CUSTOMER\'S COMPANY NAME ? '))
         C_Telephone = str(input('What is the CUSTOMER\'S TELEPHONE # ? '))
         C_Person = str(input('Who is the CONTACT PERSON ? '))
         C_TRN =  str(input('What is the CUSTOMER\'S TRN ? '))
 
-        print("Success ! Got customer details")
+        print("Success ! Got customer details.")
   
         C_asked = True
         
@@ -54,16 +54,16 @@ def main():
         VAT_Amount = Unit_Amount*Quantity*0.05
         Total_Amount = Unit_Amount*Quantity*1.05
 
-        print("Success ! Got contract details")
+        print("Success ! Got contract details.")
 
 
         # Editing
         doc.paragraphs[5].text = ''.join(['Company name: ', C_Name])
 
         doc.tables[0].cell(0,0).text = ''.join(['Telephone No: ', C_Telephone])
-        doc.tables[0].cell(0,1).text = ''.join(['Contact Person: ' , C_Person])
-        doc.tables[0].cell(0,2).text = ''.join(['Customer TRN: ' , C_TRN])
-        doc.tables[0].cell(1,0).text = ''.join(['Invoice No: ' , str(D_Invoice)])
+        doc.tables[0].cell(1,0).text = ''.join(['Contact Person: ' , C_Person])
+        doc.tables[0].cell(2,0).text = ''.join(['Customer TRN: ' , C_TRN])
+        doc.tables[0].cell(0,1).text = ''.join(['Invoice No: ' , str(D_Invoice)])
 
         doc.tables[1].cell(1,0).text = '01'
         doc.tables[1].cell(1,1).text = '01'
