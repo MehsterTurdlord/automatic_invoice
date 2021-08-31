@@ -5,7 +5,14 @@ from pprint import pprint
 def get_invoice_number():
     '''
     Reads the configuration document and extracts the invoice number, then iterating and returning it.
-    Returns: [int] invoice number + 1
+    Returns:
+    
+    Parameters
+    -------
+    Returns
+    -------
+    Invoice_No: int
+        The invoice number last used 
     '''
     Invoice_No = 0
     I_doc = Document('Invoice.docx')
@@ -20,26 +27,52 @@ def set_invoice_number(Invoice_No):
     '''
     After a successful run, it takes the invoice number and writes the configuration file and replaces the old with the new.
     Returns: nothing, but perhaps a "success" note.
+    
+    Parameters
+    -------
+    I_doc: Document
+        The open document that saves the invoice number.
     '''
     I_doc = Document('Invoice.docx')
     I_doc.paragraphs[0].text = str(Invoice_No + 1)
 
     I_doc.save('Invoice.docx')
-    print("Success ! Set Invoice #.")
+    print("Success ! Set Invoice #.") 
+
+
+def build_invoice():
+    """
+    Either this or the main should be the one that builds the invoice.
+
+    Parameters
+    -------
+    Returns
+    -------
+    """
     
+    return 'WIP'
+
 
 def main():
-    
+    """
+    I am not about to delineate each item since I do need to remove the input functionality from this
+    because I am going to use Java as my front end.
+
+    Parameters
+    -------
+    Returns
+    -------
+    """
     doc = Document('original_file.docx')
     C_asked = False
     n = int(input('How many of the same INVOICES for the SAME customer ? (type a number) ') or 1)
     
     # Collecting
     if C_asked is False:
-        C_Name = str(input('What is the CUSTOMER\'S COMPANY NAME ? '))
-        C_Telephone = str(input('What is the CUSTOMER\'S TELEPHONE # ? '))
-        C_Person = str(input('Who is the CONTACT PERSON ? '))
-        C_TRN =  str(input('What is the CUSTOMER\'S TRN ? '))
+        C_Name = str(input('What is the CUSTOMER\'S COMPANY NAME ? ') or 'University of Wollongong in Dubai')
+        C_Telephone = str(input('What is the CUSTOMER\'S TELEPHONE # ? ') or '971-56-1322345')
+        C_Person = str(input('Who is the CONTACT PERSON ? ') or 'Mr Wollongong')
+        C_TRN =  str(input('What is the CUSTOMER\'S TRN ? ') or '12381239018')
 
         print("Success ! Got customer details.")
   
@@ -48,9 +81,9 @@ def main():
     while n >= 1:
         D_Invoice = get_invoice_number()
 
-        Description = str(input('What is the DESCRIPTION ? '))
-        Quantity = float(input('What is the QUANTITY ? '))
-        Unit_Amount = float(input('What is the UNIT AMOUNT ? '))
+        Description = str(input('What is the DESCRIPTION ? ') or 'Printers')
+        Quantity = float(input('What is the QUANTITY ? ') or 5)
+        Unit_Amount = float(input('What is the UNIT AMOUNT ? ') or 50)
         VAT_Amount = Unit_Amount*Quantity*0.05
         Total_Amount = Unit_Amount*Quantity*1.05
 

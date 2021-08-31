@@ -1,2 +1,6 @@
 
 *.docx
+/bin/
+*.lnk
+src/pythonplusJava/pythonplusjava.java
+src/module-info.java

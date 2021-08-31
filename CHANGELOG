@@ -1,0 +1,28 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unrealeased]
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.0.4] 'Defaults and Fixing Formats'
+
+### Added
+- Defaults, so as to improve testing flow.
+- Proper format functionality, so all looks well.
+- Empty build_invoice() function in preparation for the upcoming removal of the front-end functionality in the python.
+
+### Changed
+
+### Fixed
+- Formatting of the MS Template Doc to fit better with the necessary document style.
+
+### Removed
