@@ -8,7 +8,7 @@ And more when I have the time.
 # Plan
  I want to use Python as my back end, and Java as my front end.
 
- I had already made a functional Python script beforehand, but I feel like 'TKinter' – Python's answer to easy GUI – is ideal for my circumstances.
+ I had already made a functional Python script beforehand, but I feel like 'TKinter' – Python's answer to easy GUI – is not ideal for my circumstances.
  
  Java has the tools and functionality I prefer – and this whole thing would be a great exercise for my ability in documentation, programming, etc.
 
