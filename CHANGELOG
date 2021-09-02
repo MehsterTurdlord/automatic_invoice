@@ -6,12 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrealeased]
 ### Added
+- [Java] A GUI to handle all input declarations
+- [Java] Input Functionality
+- [Java] Validation for all input
+- [Java] Java-CMD-Python functionality
+- [Java] A recursive element
+- [Java & Python] Support for multiple items
 
 ### Changed
+- [Python] The main() function now accepts vars
 
 ### Fixed
 
 ### Removed
+- [Python] The recursive element
+
+## [0.0.5] 'Backend – Mostly – Complete'
+### Added
+- [Python] Support for decimal word conversion
+- [Python] Support for integer word conversion
+- [Python] get_date() for getting today's date while still being manual in the MS Word Doc
+- [Python] More print statements to determine progress.
+
+### Changed
+- [Python] All monetary variables have a minimum of 2 characters
 
 ## [0.0.4] 'Defaults and Fixing Formats'
 
@@ -20,9 +38,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proper format functionality, so all looks well.
 - Empty build_invoice() function in preparation for the upcoming removal of the front-end functionality in the python.
 
-### Changed
-
 ### Fixed
 - Formatting of the MS Template Doc to fit better with the necessary document style.
-
-### Removed
