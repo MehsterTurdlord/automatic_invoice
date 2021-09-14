@@ -6,17 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrealeased]
 ### Added
-- [Java] A GUI to handle all input declarations
-- [Java] Input Functionality
-- [Java] Validation for all input
 - [Java] Java-CMD-Python functionality
-- [Java] A recursive element
 - [Java & Python] Support for multiple items
-
+- [Java] Presence check
 ### Changed
 - [Python] The main() function now accepts vars
 
 ### Fixed
+
+### Removed
+
+
+## [0.0.6] 'Frontend – somewhat – complete'
+### Added
+- [Java] A GUI to handle all input declarations
+- [Java] Input Functionality
+- [Java] Validation for all input except a presence check
+- [Java] A recursive element
 
 ### Removed
 - [Python] The recursive element
