@@ -6,16 +6,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrealeased]
 ### Added
-- [Java] Java-CMD-Python functionality
-- [Java & Python] Support for multiple items
+- [Java] GUI forwarding of input to the CLI
+- [Java_Python] Support for multiple items
 - [Java] Presence check
+
 ### Changed
-- [Python] The main() function now accepts vars
+- [Java] Recoded and refactored the CLI code.
 
 ### Fixed
 
 ### Removed
+- [Python] Removed or commented out unnecessary print and pprint statements.
 
+## [0.0.7] 'CLI – INTEGRATED'
+### Added
+- [Java] Java-CMD-Python functionality
+- [Python] A lot of scaffolding for the sake of bug-quashing
+
+### Changed
+- [Python] main() now has a try and except block which checks for extra command line arguments to use as input, if none, then it continues as normal.
+
+### Removed
+- [Python] Recursion as I would prefer it in the Front End. 
+
+### Depreciated
+- [Python] Total Amount in words as it is currently not working properly.
+
+### Known Bugs
+-[Python] Total Amount does not work with any number.
 
 ## [0.0.6] 'Frontend – somewhat – complete'
 ### Added

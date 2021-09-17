@@ -1,6 +1,7 @@
 from docx import Document
 from datetime import datetime
-
+import sys
+from pprint import pprint
 
 def get_invoice_number():
     '''
@@ -273,6 +274,9 @@ def get_date():
     """Get's todays date from the datetime module in the requested format."""
     return datetime.today().date().strftime('%B %d %Y')
 
+def get_values():
+    """Gets the values from the CLI."""
+    
 
 def main():
     """
@@ -329,55 +333,65 @@ def main():
     None
     """
 
-    C_asked = False
-    n = int(input('How many of the same INVOICES for the SAME customer ? (type a number) ') or 1)
+    print('Getting invoice number...')
+    
+    D_Invoice = get_invoice_number()
 
-    # Collecting
-    if C_asked is False:
+    try:
+        pprint(sys.argv)
+        C_Name = str(sys.argv[1])
+        C_Telephone = str(sys.argv[2])
+        C_Person = str(sys.argv[3])
+        C_TRN =  str(sys.argv[4])
+
+        print("Success ! Got customer details.")
+        print(sys.argv[5])
+        print(type(sys.argv[5]))
+        
+        Description = str(sys.argv[5])
+        Quantity = float(sys.argv[6])
+        Unit_Amount = float(sys.argv[7])
+        print(Quantity)
+        print(Unit_Amount)
+                       
+    except:   
         C_Name = str(input('What is the CUSTOMER\'S COMPANY NAME ? ') or 'University of Wollongong in Dubai')
         C_Telephone = str(input('What is the CUSTOMER\'S TELEPHONE # ? ') or '971-56-1322345')
         C_Person = str(input('Who is the CONTACT PERSON ? ') or 'Mr Wollongong')
         C_TRN =  str(input('What is the CUSTOMER\'S TRN ? ') or '12381239018')
 
         print("Success ! Got customer details.")
-        C_asked = True
-
-    while n >= 1:
-        print('Getting invoice number...')
-        D_Invoice = get_invoice_number()
 
         Description = str(input('What is the DESCRIPTION ? ') or 'Printers')
         Quantity = float(input('What is the QUANTITY ? ') or 5)
         Unit_Amount = float(input('What is the UNIT AMOUNT ? ') or 50)
-        
-        print('Calculating values...')
-        Base_Amount = round(Unit_Amount * Quantity, 2)
-        VAT_Amount = round(Base_Amount * 0.05, 2)
-        Total_Amount = round(Base_Amount + VAT_Amount, 2)
-        
-        print('Ensuring minimum format...')
-        values = minimum_format_ensurer({
-        'C_Nam': C_Name, 'C_Tel': C_Telephone, 'C_Per': C_Person,
-        'C_TRN': C_TRN, 'D_Inv': D_Invoice,
-        'D': Description, 'Q': Quantity, 'U': Unit_Amount,
-        'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
-        })
+    
+    print('Calculating values...')
+    Base_Amount = round(Unit_Amount * Quantity, 2)
+    VAT_Amount = round(Base_Amount * 0.05, 2)
+    Total_Amount = round(Base_Amount + VAT_Amount, 2)
+    
+    print('Ensuring minimum format...')
+    values = minimum_format_ensurer({
+    'C_Nam': C_Name, 'C_Tel': C_Telephone, 'C_Per': C_Person,
+    'C_TRN': C_TRN, 'D_Inv': D_Invoice,
+    'D': Description, 'Q': Quantity, 'U': Unit_Amount,
+    'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
+    })
+    pprint(values)
+    
+    print('Converting number into words...')
+    #values['W'] = ''.join(['AED: ', intconvert(values['T'][0]), decconvert(values['T'][1]), ' FILS', ' only']).upper()
+    values['W'] = 'WIP'
+    
+    print('Acquiring dates...')
+    values['Date'] = get_date()
 
-        print('Converting number into words...')
-        values['W'] = ''.join(['AED: ', intconvert(values['T'][0]), decconvert(values['T'][1]), ' FILS', ' only']).upper()
-        
-        print('Acquiring dates...')
-        values['Date'] = get_date()
+    print('Building invoices...')
+    build_invoice(values)
 
-        print('Building invoices...')
-        build_invoice(values)
-
-        print('Setting invoice number...')
-        set_invoice_number(D_Invoice)
-
-        n = n - 1
-
-    C_asked = False
+    print('Setting invoice number...')
+    set_invoice_number(D_Invoice)
 
     return None
 
