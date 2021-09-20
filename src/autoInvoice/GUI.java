@@ -3,7 +3,9 @@ package autoInvoice;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * 
@@ -218,15 +220,39 @@ public class GUI extends JFrame implements ActionListener {
 	 * 
 	 * @param an immutable list which is transfered item by item into the CLI
 	 */
-	public void CLIexperience() {
-		ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c","cd \"C:\\Users\\peme8\\Documents\\GitHub\\Automatic_Invoice\" && dir");
-		builder.redirectErrorStream();
+	public void CLIexperience(String CName, String CTel, String CPer, String CTRN, String Des, String Quant, String UAmount ) {
+		String s = null;
+		
 		try {
-			Process p = builder.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			Process p = Runtime.getRuntime().exec(
+					"python DocumentBuilder.py %s %s %s %s %s %s %s".formatted(CName, CTel, CPer, CTRN, Des, Integer.parseInt(Quant), Integer.parseInt(UAmount))
+					);
+            
+            BufferedReader stdInput = new BufferedReader(new 
+                 InputStreamReader(p.getInputStream()));
+
+            BufferedReader stdError = new BufferedReader(new 
+                 InputStreamReader(p.getErrorStream()));
+
+            // read the output from the command
+            System.out.println("Here is the standard output of the command:\n");
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+            
+            // read any errors from the attempted command
+            System.out.println("Here is the standard error of the command (if any):\n");
+            while ((s = stdError.readLine()) != null) {
+                System.out.println(s);
+            }
+            
+            System.exit(0);
+        }
+        catch (IOException e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+            System.exit(-1);
+        }
 	}
 	
 	
@@ -240,7 +266,18 @@ public class GUI extends JFrame implements ActionListener {
 				if ( !(c_trn_t.getText().trim().length() == 10)) { report.setText("TRN is 10 characters only"); }
 				else if ( !(OnlyInt(i_qua_t.getText().trim())) ) { report.setText("Quantity should be in numbers and not empty !"); }
 				else if ( !(OnlyInt(i_uni_t.getText().trim())) ) { report.setText("Unit Price should be in numbers and not empty !"); }
-				else {			
+				else {
+					
+					// Forwarding to the back end
+					CLIexperience(
+							c_nam_t.getText(), 
+							c_tel_t.getText(),	
+							c_per_t.getText(), 
+							c_trn_t.getText(), 
+							i_des_t.getText(), 
+							i_qua_t.getText(), 
+							i_uni_t.getText()
+							);
 					
 					// Data clearance – except for customer data
 					String empty = "";
@@ -249,6 +286,7 @@ public class GUI extends JFrame implements ActionListener {
 					i_uni_t.setText(empty);
 					
 					report.setText("");
+					
 					
 				}
 						

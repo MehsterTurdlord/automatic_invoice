@@ -18,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - [Python] Removed or commented out unnecessary print and pprint statements.
 
+## [0.0.8] 'Connection achieved !'
+### Added
+- [Java] GUI forwarding of input to the CLI
+
+### Changed
+- [Java] Recoded and refactored the CLI code.
+
+
 ## [0.0.7] 'CLI – INTEGRATED'
 ### Added
 - [Java] Java-CMD-Python functionality
