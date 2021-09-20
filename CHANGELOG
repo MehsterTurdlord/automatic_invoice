@@ -6,12 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrealeased]
 ### Added
-- [Java] GUI forwarding of input to the CLI
 - [Java_Python] Support for multiple items
 - [Java] Presence check
 
 ### Changed
-- [Java] Recoded and refactored the CLI code.
 
 ### Fixed
 
@@ -25,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [Java] Recoded and refactored the CLI code.
 
+### Removed
+- [Java] Deleted the 'pythonplusjava' class.
 
 ## [0.0.7] 'CLI – INTEGRATED'
 ### Added
