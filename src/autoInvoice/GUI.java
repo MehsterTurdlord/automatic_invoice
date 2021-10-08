@@ -19,6 +19,10 @@ import java.io.InputStreamReader;
  */
 public class GUI extends JFrame implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//components
 	private Container c;
 	private JLabel title;
@@ -202,7 +206,6 @@ public class GUI extends JFrame implements ActionListener {
 		
 		for ( int i = 0; i <n; i++ ) {	
 			if (test.charAt(i) >= '0' && test.charAt(i) <='9' ) {return true;}
-			else { return false; }
 			
 		}
 		
