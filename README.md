@@ -6,10 +6,17 @@ v04 will come in time.
 And more when I have the time.
 
 # Plan
- I want to use Python as my back end, and Java as my front end.
+In this purely-python edition of the sort-of-an-app, I intend to use Tkinter to act as the GUI.
 
- I had already made a functional Python script beforehand, but I feel like 'TKinter' – Python's answer to easy GUI – is not ideal for my circumstances.
- 
- Java has the tools and functionality I prefer – and this whole thing would be a great exercise for my ability in documentation, programming, etc.
+Version 1.0:
+I will make a new script that acts as the GUI service, while the previous code will remain universal to this and the Java edition.
 
- I would also be able to use the script I wrote, thus saving me some time and effort.
+It will be purely functional, 
+have an input for every input,
+and a button for the two options of clearing some or starting the input anew.
+
+Version 2.0:
+I will configure items to increase its functionality after some field tests.
+
+Version 3.0:
+I will think about a greater and more seamless UX.
