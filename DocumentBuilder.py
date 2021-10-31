@@ -66,9 +66,9 @@ def build_invoice(values):
     -------
     values: dict
        {
-        'C_Nam': C_Name, 'C_Tel': C_Telephone, 'C_Per': C_Person,
-        'C_TRN': C_TRN, 'D_Inv': D_Invoice,
-        'D': Description, 'Q': Quantity, 'U': Unit_Amount,
+        'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
+        'cTRN': cTRN, 'D_Inv': D_Invoice,
+        'D': pDes, 'Q': pQua, 'U': pCos,
         'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
         }
 
@@ -84,7 +84,7 @@ def build_invoice(values):
 
     doc.tables[0].cell(0,0).text = 'TELEPHONE NO: ' + values['C_Tel']
     doc.tables[0].cell(1,0).text = 'CONTACT PERSON: ' + values['C_Per']
-    doc.tables[0].cell(2,0).text = 'CUSTOMER TRN: ' + values['C_TRN']
+    doc.tables[0].cell(2,0).text = 'CUSTOMER TRN: ' + values['cTRN']
     
     doc.tables[0].cell(0,1).text = 'INVOICE No: ' + values['D_Inv']
     doc.tables[0].cell(1,1).text = 'DATE: ' + values['Date']
@@ -223,9 +223,9 @@ def minimum_format_ensurer(values):
 
     values: dict
        {
-        'C_Nam': C_Name, 'C_Tel': C_Telephone, 'C_Per': C_Person,
-        'C_TRN': C_TRN, 'D_Inv': D_Invoice,
-        'D': Description, 'Q': Quantity, 'U': Unit_Amount,
+        'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
+        'cTRN': cTRN, 'D_Inv': D_Invoice,
+        'D': pDes, 'Q': pQua, 'U': pCos,
         'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
         }
         This is the dict of old values, some str, some int, some float.
@@ -278,7 +278,7 @@ def get_values():
     """Gets the values from the CLI."""
     
 
-def main():
+def main(GUIDetails = None):
     """
     First, input and get_invoice_number().
     Then we prepare the values with calculations and minimum_num_format().
@@ -286,44 +286,32 @@ def main():
 
     Parameters
     -------
-    C_Name: str
-
-    C_Telephone: str
-
-    C_Person: str
-
-    C_TRN: str
-
+    cNam: str
+    cTel: str
+    cPer: str
+    cTRN: str
     C_Asked: boolean
         This is whether or not we have to ask for the customer – prefix: C_ – variables.
         In the case of repeat invoices, for example. [Depreciation soon]
-
     D_invoice: int
         This is received from get_invoice_number() and it is used to update through set_invoice_number()
-
-    Description: str
-        The description of the unit
-
-    Quantity: float
+    pDes: str
+        The pDes of the unit
+    pQua: float
         The amount ordered of each unit
-
-    Unit_Amount: float
+    pCos: float
         The cost of each unit
-
     Base_Amount: float
-        The Quantity * the Unit_Amount
-
+        The pQua * the pCos
     VAT_Amount: float
         The Base_Amount * 0.05
-
     Total_Amount: float
         The Base_Amount * 1.05
-
     values: dict
        {
-        'C_Nam': C_Name, 'C_Tel': C_Telephone, 'C_Per': C_Person,
-        'C_TRN': C_TRN, 'D_Inv': D_Invoice,
-        'D': Description, 'Q': Quantity, 'U': Unit_Amount,
+        'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
+        'cTRN': cTRN, 'D_Inv': D_Invoice,
+        'D': pDes, 'Q': pQua, 'U': pCos,
         'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
         }
         These values have gone through a function and have returned differently
@@ -337,45 +325,38 @@ def main():
     
     D_Invoice = get_invoice_number()
 
+    # Depreciate this.
     try:
-        pprint(sys.argv)
-        C_Name = str(sys.argv[1])
-        C_Telephone = str(sys.argv[2])
-        C_Person = str(sys.argv[3])
-        C_TRN =  str(sys.argv[4])
-
-        print("Success ! Got customer details.")
-        print(sys.argv[5])
-        print(type(sys.argv[5]))
-        
-        Description = str(sys.argv[5])
-        Quantity = float(sys.argv[6])
-        Unit_Amount = float(sys.argv[7])
-        print(Quantity)
-        print(Unit_Amount)
-                       
+        cNam = str( GUIDetails[0]   );
+        cTel = str( GUIDetails[1]   );
+        cPer = str( GUIDetails[2]   );
+        cTRN = str( GUIDetails[3]   );
+        pDes = str( GUIDetails[4]   );
+        pQua = float( GUIDetails[5] );
+        pCos = float( GUIDetails[6] );
+    
     except:   
-        C_Name = str(input('What is the CUSTOMER\'S COMPANY NAME ? ') or 'University of Wollongong in Dubai')
-        C_Telephone = str(input('What is the CUSTOMER\'S TELEPHONE # ? ') or '971-56-1322345')
-        C_Person = str(input('Who is the CONTACT PERSON ? ') or 'Mr Wollongong')
-        C_TRN =  str(input('What is the CUSTOMER\'S TRN ? ') or '12381239018')
+        cNam = str(input('What is the CUSTOMER\'S COMPANY NAME ? ') or 'University of Wollongong in Dubai')
+        cTel = str(input('What is the CUSTOMER\'S TELEPHONE # ? ') or '971-56-1322345')
+        cPer = str(input('Who is the CONTACT PERSON ? ') or 'Mr Wollongong')
+        cTRN =  str(input('What is the CUSTOMER\'S TRN ? ') or '12381239018')
 
         print("Success ! Got customer details.")
 
-        Description = str(input('What is the DESCRIPTION ? ') or 'Printers')
-        Quantity = float(input('What is the QUANTITY ? ') or 5)
-        Unit_Amount = float(input('What is the UNIT AMOUNT ? ') or 50)
+        pDes = str(input('What is the pDes ? ') or 'Printers')
+        pQua = float(input('What is the pQua ? ') or 5)
+        pCos = float(input('What is the UNIT AMOUNT ? ') or 50)
     
     print('Calculating values...')
-    Base_Amount = round(Unit_Amount * Quantity, 2)
+    Base_Amount = round(pCos * pQua, 2)
     VAT_Amount = round(Base_Amount * 0.05, 2)
     Total_Amount = round(Base_Amount + VAT_Amount, 2)
     
     print('Ensuring minimum format...')
     values = minimum_format_ensurer({
-    'C_Nam': C_Name, 'C_Tel': C_Telephone, 'C_Per': C_Person,
-    'C_TRN': C_TRN, 'D_Inv': D_Invoice,
-    'D': Description, 'Q': Quantity, 'U': Unit_Amount,
+    'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
+    'cTRN': cTRN, 'D_Inv': D_Invoice,
+    'D': pDes, 'Q': pQua, 'U': pCos,
     'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
     })
     pprint(values)

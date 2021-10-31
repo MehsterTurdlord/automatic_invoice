@@ -4,17 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unrealeased]
+## [Unreleased]
 ### Added
-- [Java_Python] Support for multiple items
+- [Python] Support for multiple items
 - [Java] Presence check
+- [Python] A last done action saving feature
+- [Python] Tests
 
 ### Changed
+- [Python] Improved the UX
+- [Python] Refactor the clear options so that the buttons indicate whether we need to clear a few or all.
 
 ### Fixed
 
 ### Removed
-- [Python] Removed or commented out unnecessary print and pprint statements.
+
+## [p.0.1] 'Tkinter: A New Hope.'
+### Added
+- [Python] Several new functions
+- [Python] Semi-temporary grid feature
+- [Python] Buttons, Labels, Entries.
+- [Python] Progress indicators
+
+### Changed
+- [Python] The default variables in the Document Builder script
+
+### Removed
+- [Python] Removed support for automatic command line variable assignage
 
 ## [0.0.8] 'Connection achieved !'
 ### Added
