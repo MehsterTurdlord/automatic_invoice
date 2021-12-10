@@ -1,6 +1,5 @@
 from docx import Document
 from datetime import datetime
-import sys
 from pprint import pprint
 
 def get_invoice_number():
@@ -19,11 +18,13 @@ def get_invoice_number():
     '''
 
     Invoice_No = ''
-
-    I_doc = Document('Invoice.docx')
-    Invoice_No = str(I_doc.paragraphs[0].text)
+    try:
+        I_doc = Document('Invoice.docx')
+        Invoice_No = str(I_doc.paragraphs[0].text)
     
-    I_doc.save('Invoice.docx')
+        I_doc.save('Invoice.docx')
+    except:
+        Invoice_No = '9414'
 
     print("Success ! Got Invoice #.")
 
@@ -47,13 +48,15 @@ def set_invoice_number(Invoice_No):
     ------
     None
     '''
+    try:
+        I_doc = Document('Invoice.docx')
+        Invoice_No = int(Invoice_No) + 1
+        I_doc.paragraphs[0].text = str(Invoice_No)
 
-    I_doc = Document('Invoice.docx')
-    Invoice_No = int(Invoice_No) + 1
-    I_doc.paragraphs[0].text = str(Invoice_No)
-
-    I_doc.save('Invoice.docx')
-    print("Success ! Set Invoice #.")
+        I_doc.save('Invoice.docx')
+        print("Success ! Set Invoice #.")
+    except:
+        None
 
     return None
 
@@ -64,13 +67,14 @@ def build_invoice(values):
 
     Parameters
     -------
-    values: dict
-       {
-        'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
-        'cTRN': cTRN, 'D_Inv': D_Invoice,
-        'D': pDes, 'Q': pQua, 'U': pCos,
-        'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
-        }
+    values: Dict
+        'cNam': str, 'cTel': int, 'cPer': str,  
+        'cTRN': int, 'dInv': int, 'products': list,
+        'totalValues': float, 'totalWords: str
+
+    products: list
+        'pDes': str, 'pQua': float, 'pCos': float, 
+        'base': float, 'VAT': float, 'total': float
 
     Returns
     -------
@@ -79,43 +83,50 @@ def build_invoice(values):
 
     doc = Document('original_file.docx')
 
-    # Editing
-    doc.paragraphs[7].text = 'Company name: ' + values['C_Nam']
-
-    doc.tables[0].cell(0,0).text = 'TELEPHONE NO: ' + values['C_Tel']
-    doc.tables[0].cell(1,0).text = 'CONTACT PERSON: ' + values['C_Per']
-    doc.tables[0].cell(2,0).text = 'CUSTOMER TRN: ' + values['cTRN']
     
-    doc.tables[0].cell(0,1).text = 'INVOICE No: ' + values['D_Inv']
-    doc.tables[0].cell(1,1).text = 'DATE: ' + values['Date']
+    doc.paragraphs[7].text       = 'Company name: '   + values['cNam']
+    doc.tables[0].cell(0,0).text = 'TELEPHONE NO: '   + values['cTel']
+    doc.tables[0].cell(1,0).text = 'CONTACT PERSON: ' + values['cPer']
+    doc.tables[0].cell(2,0).text = 'CUSTOMER TRN: '   + values['cTRN']
+    doc.tables[0].cell(0,1).text = 'INVOICE No: '     + values['dInv']
+    doc.tables[0].cell(1,1).text = 'DATE: '           + values['date']
 
-    doc.tables[1].cell(1,0).text = '01'
-    doc.tables[1].cell(1,1).text = '01'
-    doc.tables[1].cell(1,2).text = values['D']
-    doc.tables[1].cell(1,3).text = values['Q'][0]
-    doc.tables[1].cell(1,4).text = values['U'][0]
-    doc.tables[1].cell(1,5).text = values['U'][1]
-    doc.tables[1].cell(1,6).text = values['V'][0]
-    doc.tables[1].cell(1,7).text = values['V'][1]
-    doc.tables[1].cell(1,8).text = values['T'][0]
-    doc.tables[1].cell(1,9).text = values['T'][1]
+    #TODO: Fix the pQua in this for loop properly.
+    for n in range(1, len( values['products']) + 1 ):
+        doc.tables[1].cell(n,0).text = str(n)
+        doc.tables[1].cell(n,2).text = values['products'][n-1]['pDes'];
+        doc.tables[1].cell(n,3).text = str(int(values['products'][n-1]['pQua']));
+        doc.tables[1].cell(n,4).text = values['products'][n-1]['base'][0];
+        doc.tables[1].cell(n,5).text = values['products'][n-1]['base'][1];
+        doc.tables[1].cell(n,6).text = values['products'][n-1]['VAT'][0];
+        doc.tables[1].cell(n,7).text = values['products'][n-1]['VAT'][1];
+        doc.tables[1].cell(n,8).text = values['products'][n-1]['total'][0];
+        doc.tables[1].cell(n,9).text = values['products'][n-1]['total'][1];
 
-    doc.tables[1].cell(9,8).text = 'AED: ' + values['B'][0]
-    doc.tables[1].cell(9,9).text = values['B'][1]
-    doc.tables[1].cell(10,8).text = 'AED: ' + values['V'][0]
-    doc.tables[1].cell(10,9).text = values['V'][1]
-    doc.tables[1].cell(11,8).text = 'AED: ' + values['T'][0]
-    doc.tables[1].cell(11,9).text = values['T'][1]
-    doc.tables[1].cell(12,0).text = values['W'] 
+    # The total base price
+    doc.tables[1].cell(9,8).text  = 'AED: ' + values['totalValues'][0]['base'][0]
+    doc.tables[1].cell(9,9).text  = values['totalValues'][0]['base'][1]
+    
+    # The total VAT price
+    doc.tables[1].cell(10,8).text = 'AED: ' + values['totalValues'][0]['VAT'][0]
+    doc.tables[1].cell(10,9).text = values['totalValues'][0]['VAT'][1]
 
-    doc.save(values['D_Inv'] + ' ' + values['C_Nam'] + '.docx')
+    # The total total price    
+    doc.tables[1].cell(11,8).text = 'AED: ' + values['totalValues'][0]['total'][0]
+    doc.tables[1].cell(11,9).text = values['totalValues'][0]['total'][1]
+
+    # The total total in words
+    doc.tables[1].cell(12,0).text = values['totalWords'] 
+
+    # Saving
+    doc.save(values['dInv'] + ' ' + values['cNam'] + '.docx')
 
     print("Success ! Created invoice !")
     
     return None
 
 
-def intconvert(num):
+def intConvert(num):
     """
     This transforms a constant from number format to one of letters and words.
 
@@ -143,35 +154,36 @@ def intconvert(num):
     numEngB = ['twenty', 'thirty', 'fourty', 'fifty',
        'sixty', 'seventy', 'eighty', 'ninety']
     
-    num = int(num)
+    num = int(num);
 
     if 1 <= num <= 19:
-	    return numEngA[num]
+        return numEngA[num];
 
     elif 20 <= num <= 99:
-	    tens, units = divmod(num, 10)
-	    #print('The tens: {}'.format(tens))
-	    #print('The units: {}'.format(units))
-	    return numEngB[tens - 2] + '-' + numEngA[units] if units else numEngB[tens - 2]
-
+        tens, units = divmod(num, 10);	    
+        print('The tens: {}'.format(tens));
+        print('The units: {}'.format(units));
+        return numEngB[tens - 2] + '-' + numEngA[units] if units else numEngB[tens - 2];
+    
     elif 100 <= num <= 999:
-	    hundreds, tens = divmod(num, 100)
-	    #print('The hundreds: {}'.format(hundreds))
-	    #print('The tens: {}'.format(tens))
+        hundreds, tens = divmod(num, 100);
+        print('The hundreds: {}'.format(hundreds));
+        print('The tens: {}'.format(tens));
 
-	    return intconvert(hundreds) + ' hundred' + ' and ' + intconvert(tens) if tens else intconvert(hundreds) + ' hundred'
+        return intConvert(hundreds) + ' hundred' + ' and ' + intConvert(tens) if tens else intConvert(hundreds) + ' hundred';
 
     elif 1000 <= num <= 9999:
-	    thousands, hundreds = divmod(num, 1000)
-	    #print('The thousands: {}'.format(thousands))
-	    #print('The hundreds: {}'.format(hundreds))
-	    return intconvert(thousands) + ' thousand' + ' and ' + intconvert(hundreds) if hundreds else intconvert(thousands) + ' thousand'
+        thousands, hundreds = divmod(num, 1000);
+        print('The thousands: {}'.format(thousands));
+        print('The hundreds: {}'.format(hundreds));
+        
+        return intConvert(thousands) + ' thousand' + ' and ' + intConvert(hundreds) if hundreds else intConvert(thousands) + ' thousand';
 	
     else:
-	    print('Sorry, the number is outside of our boundaries !')
+	    print('Sorry, the number is outside of our boundaries !');
 
 
-def decconvert(dec):
+def decConvert(dec):
     """
 	This is a number-word converter, but for decimals.
 	
@@ -201,13 +213,12 @@ def decconvert(dec):
 		5: 'fifty', 6: 'sixty', 7: 'seventy', 8: 'eighty', 9: 'ninety',
         }
 
-    frstDP = int(dec[0])
-    scndDP = int(dec[1])
+    frstDP = int(dec[0]);
+    scndDP = int(dec[1]);
+    return ' and ' + numEngA[frstDP] + ' ' + numEngA[scndDP] if not scndDP else ' and ' + numEngB[frstDP]
 
-    return ' and ' + numEngA[frstDP] + ' ' + numEngA[scndDP] if scndDP else ' and ' + numEngB[frstDP]
 
-
-def minimum_format_ensurer(values):
+def minimum_format_ensurer(products):
     """
     This is a function to ensure that there is at least 2 digits to each input.
 
@@ -221,16 +232,10 @@ def minimum_format_ensurer(values):
     Parameters
     -------
 
-    values: dict
-       {
-        'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
-        'cTRN': cTRN, 'D_Inv': D_Invoice,
-        'D': pDes, 'Q': pQua, 'U': pCos,
-        'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
-        }
-        This is the dict of old values, some str, some int, some float.
+    h: dict
+        this is the dict of each product.
 
-    h: str
+    k: str
         This is the key of each dict entry.
 
     i: str/int/float
@@ -238,41 +243,69 @@ def minimum_format_ensurer(values):
 
     Returns
     -------
-    values: dict
-        This is a dict of the new values, some tuples, but all will be used as str.
+    : list
     """
+    for h in products:
+        for k, i in h.items():
+            if k == 'pQua':
+                continue;
+                
+            if type(i) is int and len(str(i)) == 1:
+                #print('is int !')
+                i = '0' + str(i)
 
-    for h, i in values.items():
-        if type(i) is int and len(str(i)) == 1:
-            #print('is int !')
-            i = '0' + str(i)
+            elif type(i) is float:
+                #print('is float !')
+                AED = str(i).split('.')[0]
+                FIL = str(i).split('.')[-1]
 
-        elif type(i) is float:
-            #print('is float !')
-            AED = str(i).split('.')[0]
-            FIL = str(i).split('.')[-1]
+                if len(AED) == 1:
+                    AED = '0' + AED
 
-            if len(AED) == 1:
-                AED = '0' + AED
+                if len(FIL) == 1:
+                    FIL = FIL + '0'
 
-            if len(FIL) == 1:
-                FIL = FIL + '0'
+                i = (AED, FIL)
+                #print(AED, FIL)
 
-            i = (AED, FIL)
-            #print(AED, FIL)
+            else:
+                #print('is undesirable !')
+                continue
 
-        else:
-            #print('is undesirable !')
-            continue
+            h[k] = i;
 
-        values[h] = i
+    return products
 
-    return values
+
+def totaler(products):
+    """Totals the total value of each product."""
+    totalDict = {'base': 0, 'VAT': 0, 'total': 0};
+
+    for h in products:
+        totalDict['base'] += h['base'];
+        totalDict['VAT'] += h['VAT'];
+        totalDict['total'] += h['total'];
+
+    return totalDict;
+
+
+def splitter(h):
+    """ Splits dictionary numbers by the decimal point."""
+    if type(h) is dict:
+        for k, i in h.items():
+            h[k] = str(i).split('.');
+
+    if type(h) is list:
+        for n in range(0, len(h)):
+            h[n] = splitter(h[n])
+
+    return h
 
 
 def get_date():
     """Get's todays date from the datetime module in the requested format."""
-    return datetime.today().date().strftime('%B %d %Y')
+    return datetime.today().date().strftime('%B %d %Y');
+
 
 def get_values():
     """Gets the values from the CLI."""
@@ -290,31 +323,29 @@ def main(GUIDetails = None):
     cTel: str
     cPer: str
     cTRN: str
-    C_Asked: boolean
-        This is whether or not we have to ask for the customer – prefix: C_ – variables.
-        In the case of repeat invoices, for example. [Depreciation soon]
-    D_invoice: int
+    dInv int
         This is received from get_invoice_number() and it is used to update through set_invoice_number()
+    
+    products: list
+        this is a list made of dicts, the following items - range ending at 'values', exclusively - make up each
+         dict in order to allow for multiple items.
+
     pDes: str
-        The pDes of the unit
     pQua: float
-        The amount ordered of each unit
     pCos: float
-        The cost of each unit
-    Base_Amount: float
+    base: float
         The pQua * the pCos
-    VAT_Amount: float
+    VAT: float
         The Base_Amount * 0.05
-    Total_Amount: float
+    total: float
         The Base_Amount * 1.05
+
     values: dict
-       {
-        'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
-        'cTRN': cTRN, 'D_Inv': D_Invoice,
-        'D': pDes, 'Q': pQua, 'U': pCos,
-        'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
-        }
-        These values have gone through a function and have returned differently
+        {'cNam': cNam, 'cTel': cTel, 'cPer': cPer,  
+         'cTRN': cTRN, 'dInv': dInv, 'products': products, }
+
+    k: dict
+        this is the temporary pointer to the dicts made during the loops.
 
     Returns
     -------
@@ -323,56 +354,87 @@ def main(GUIDetails = None):
 
     print('Getting invoice number...')
     
-    D_Invoice = get_invoice_number()
+    dInv = get_invoice_number()
+    products = []
 
     # Depreciate this.
     try:
-        cNam = str( GUIDetails[0]   );
-        cTel = str( GUIDetails[1]   );
-        cPer = str( GUIDetails[2]   );
-        cTRN = str( GUIDetails[3]   );
-        pDes = str( GUIDetails[4]   );
-        pQua = float( GUIDetails[5] );
-        pCos = float( GUIDetails[6] );
+        cNam = str( GUIDetails[0] );
+        cTel = str( GUIDetails[1] );
+        cPer = str( GUIDetails[2] );
+        cTRN = str( GUIDetails[3] );
+        
+        for n in range(4, len(GUIDetails) + 1 ):
+            h = {}
+
+            h['pDes'] = str(   GUIDetails[n][0] );
+            h['pQua'] = float( GUIDetails[n][1] );
+            h['pCos'] = float( GUIDetails[n][2] );
+
+            products.append(h);
     
     except:   
-        cNam = str(input('What is the CUSTOMER\'S COMPANY NAME ? ') or 'University of Wollongong in Dubai')
-        cTel = str(input('What is the CUSTOMER\'S TELEPHONE # ? ') or '971-56-1322345')
-        cPer = str(input('Who is the CONTACT PERSON ? ') or 'Mr Wollongong')
-        cTRN =  str(input('What is the CUSTOMER\'S TRN ? ') or '12381239018')
+        cNam = str( input( 'What is the CUSTOMER\'S COMPANY NAME ? ' ) or 'University of Wollongong in Dubai')
+        cTel = str( input( 'What is the CUSTOMER\'S TELEPHONE # ? '  ) or '971-56-1322345'                   )
+        cPer = str( input( 'Who is the CONTACT PERSON ? '            ) or 'Mr Wollongong'                    )
+        cTRN = str( input( 'What is the CUSTOMER\'S TRN ? '          ) or '12381239018'                      )
 
-        print("Success ! Got customer details.")
+        print("Success ! Received customer details.")
 
-        pDes = str(input('What is the pDes ? ') or 'Printers')
-        pQua = float(input('What is the pQua ? ') or 5)
-        pCos = float(input('What is the UNIT AMOUNT ? ') or 50)
+        while True:
+            h = {}
+            h['pDes'] = str(   input( 'What is the Product Description? ' ) or 'Printers');
+            h['pQua'] = float( input( 'How much is the Quantity ? '       ) or 5         );
+            h['pCos'] = float( input( 'How much is the Unit Amount ? '    ) or 50        );
+
+            products.append(h);
+            
+            if   str( input( 'No more products ? (Y/N)' ) or 'N' ).upper().split()[0] == 'Y':
+                break;
+            elif str( input( 'Are you sure ? (Y/N)'     ) or 'N' ).upper().split()[0] == 'Y':
+                break;
+            else:
+                continue;
+
+        print("Success ! Received product details.")
+
     
     print('Calculating values...')
-    Base_Amount = round(pCos * pQua, 2)
-    VAT_Amount = round(Base_Amount * 0.05, 2)
-    Total_Amount = round(Base_Amount + VAT_Amount, 2)
-    
+    for h in products:
+        h['base']  = round( h['pQua'] * h['pCos'], 2 );
+        h['VAT']   = round( h['base'] * 0.05     , 2 );
+        h['total'] = round( h['base'] + h['VAT'] , 2 );
+
     print('Ensuring minimum format...')
-    values = minimum_format_ensurer({
-    'C_Nam': cNam, 'C_Tel': cTel, 'C_Per': cPer,
-    'cTRN': cTRN, 'D_Inv': D_Invoice,
-    'D': pDes, 'Q': pQua, 'U': pCos,
-    'B': Base_Amount, 'V': VAT_Amount, 'T': Total_Amount
-    })
-    pprint(values)
+    values = {'cNam': cNam, 'cTel': cTel, 'cPer': cPer,  
+         'cTRN': cTRN, 'dInv': dInv, 'products': products, }
+
+    pprint(values);
     
-    print('Converting number into words...')
-    #values['W'] = ''.join(['AED: ', intconvert(values['T'][0]), decconvert(values['T'][1]), ' FILS', ' only']).upper()
-    values['W'] = 'WIP'
+    print('Converting numbers into words...');
+    
+    values['totalValues'] = totaler(  values['products'    ] );
+    values['totalValues'] = minimum_format_ensurer( [ values['totalValues'] ] );
+    #values['totalValues'] = splitter( values['totalValues' ] );
+
+    # splitting these too
+    values['products'] = minimum_format_ensurer(values['products']);
+    #values['products'] = splitter( values['products'] )
+
+    values['totalWords'] = ''.join(['AED: ', 
+        intConvert( values['totalValues'][0]['total'][0] ), 
+        decConvert( values['totalValues'][0]['total'][1] ),
+        ' FILS', ' only']).upper();
+    #values['totalWords'] = 'WIP'
     
     print('Acquiring dates...')
-    values['Date'] = get_date()
+    values['date'] = get_date()
 
     print('Building invoices...')
     build_invoice(values)
 
     print('Setting invoice number...')
-    set_invoice_number(D_Invoice)
+    set_invoice_number(dInv)
 
     return None
 

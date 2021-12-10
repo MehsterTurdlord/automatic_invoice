@@ -47,6 +47,8 @@ def _clearFew():
               ]
     for item in details:
         item.delete(0, ( len(item.get()) + 1 ));
+    
+    return None
 
 
 def _clearAll():
@@ -58,7 +60,8 @@ def _clearAll():
               ]
     for item in details:
         item.delete(0, ( len(item.get()) + 1 ));
-
+    
+    return None
 
 
 def _sendForward():
@@ -73,6 +76,13 @@ def _sendForward():
     DocumentBuilder.main( details );
 
     messagebox.showinfo('Submission Results', 'Success ! Created Document');
+
+    return None
+
+
+def addProduct():
+    """Adds three new fields - for a new product - and changes the location of the new product button."""
+    return None
 
 
 clrFew = Button(top, text ='Same Customer',    command = _clearFew    );

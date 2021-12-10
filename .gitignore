@@ -4,3 +4,4 @@
 *.lnk
 src/pythonplusJava/pythonplusjava.java
 src/module-info.java
+*.docx#
