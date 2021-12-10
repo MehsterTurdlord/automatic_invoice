@@ -1,37 +1,55 @@
 from docx import Document
 from datetime import datetime
 from pprint import pprint
+import configparser
+import os
+
+def create_config_file():
+    """Creates a configuration file."""
+
+    write_config = configparser.ConfigParser();
+    write_config.add_section("Section_1");
+    write_config.set("Section_1", "invoice", "9400");
+
+    cfgfile = open("config.ini", 'w');
+    write_config.write(cfgfile);
+    cfgfile.close();
+
+    return None
+
 
 def get_invoice_number():
     '''
-    Reads the configuration document and extracts the invoice number, then iterating and returning it.
-    Returns:
+    Reads the configuration file and extracts the invoice number, then returns after iteration.
 
     Parameters
     -------
-    Invoice_No: str
-    The invoice number last used
+    invoice_no: str
+        The invoice number last used
 
     Returns
     -------
-    Invoice_No: str
+    invoice_no: str
+        an interated invoice_no
     '''
+    invoice_no = "";
 
-    Invoice_No = ''
     try:
-        I_doc = Document('Invoice.docx')
-        Invoice_No = str(I_doc.paragraphs[0].text)
-    
-        I_doc.save('Invoice.docx')
+        cfg = configparser.ConfigParser();
+        cfg.read("config.ini");
+        invoice_no = cfg.get("Section_1", "invoice");
+        invoice_no = str( (int(invoice_no) + 1 ));
+
+        print(invoice_no);
+        print("Success ! Got Invoice #.");
+  
     except:
-        Invoice_No = '9414'
+        print("Failure ! Did not get Invoice #.");
 
-    print("Success ! Got Invoice #.")
-
-    return Invoice_No
+    return invoice_no
 
 
-def set_invoice_number(Invoice_No):
+def set_invoice_number(invoice_no):
     '''
     After a successful run, it takes the invoice number and writes the configuration file and replaces the old with the new.
     Returns: nothing, but perhaps a "success" note.
@@ -48,15 +66,19 @@ def set_invoice_number(Invoice_No):
     ------
     None
     '''
-    try:
-        I_doc = Document('Invoice.docx')
-        Invoice_No = int(Invoice_No) + 1
-        I_doc.paragraphs[0].text = str(Invoice_No)
 
-        I_doc.save('Invoice.docx')
+    try:
+        cfg = configparser.ConfigParser();
+        cfg.set("Section_1", "invoice", invoice_no);
+
+        cfg = open("config.ini", 'w');
+        cfg.write(cfg);
+        cfg.close();
+
         print("Success ! Set Invoice #.")
+
     except:
-        None
+        print("Failure ! Did not set Invoice #.");
 
     return None
 
@@ -351,9 +373,12 @@ def main(GUIDetails = None):
     -------
     None
     """
+    
+    if (os.path.isfile('config.ini')) is False:
+        create_config_file();
 
     print('Getting invoice number...')
-    
+
     dInv = get_invoice_number()
     products = []
 
@@ -390,8 +415,6 @@ def main(GUIDetails = None):
             products.append(h);
             
             if   str( input( 'No more products ? (Y/N)' ) or 'N' ).upper().split()[0] == 'Y':
-                break;
-            elif str( input( 'Are you sure ? (Y/N)'     ) or 'N' ).upper().split()[0] == 'Y':
                 break;
             else:
                 continue;
@@ -433,8 +456,9 @@ def main(GUIDetails = None):
     print('Building invoices...')
     build_invoice(values)
 
-    print('Setting invoice number...')
-    set_invoice_number(dInv)
+    print('Setting invoice number...');
+    set_invoice_number(dInv);
+
 
     return None
 

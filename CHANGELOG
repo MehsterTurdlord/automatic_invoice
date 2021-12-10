@@ -17,6 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Removed
+
+
+
+# [p.0.3] 'Attack of the dot ini'
+### Added
+- [Python] Support for configuration file
+- [Python] Added an os check to ensure a config file
+
+### Changed
+- [Python] Various items to support the configuration file
+
+### Removed
+- [Python] Dependence on a bodge-y docx file for invoice storage
 - [Python] Remove the second ask or the 'Are you Sure' from the initial request
 
 # [p.0.2] 'Rise of the Lists'
