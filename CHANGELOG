@@ -6,21 +6,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- [Java] Presence check
-- [Python] A last done action saving feature
-- [Python] Tests
+- [Python] Support for odt format
+- [Python] An intial set-up wizard that defines the logo & other company meta data, as well as the file format
+- [DevOps] An automated bot to make new changelogs or at least help in the making of them.
 
 ### Changed
-- [Python] Improved the UX
-- [Python] Refactor the clear options so that the buttons indicate whether we need to clear a few or all.
+- [Python-Backend] Sectioned off the number-word functions into its own file (for ease of re-use)
 
 ### Fixed
 
 ### Removed
 
+## [p.0.4] 'The Chungus Awakens'
+### Added
+- [Python-GUI] Removals functionality.
+- [Python-GUI] Additions functionality.
+- [Python-GUI] Previous page functionality.
+- [Python-GUI] Next Page functionality.
+- [Python-GUI] Removals functionality.
+- [Python-GUI] data checking functionality.
 
+### Changed
+- [Python-GUI] Improved the UX by setting everything up in frames.
+- [Python-GUI] Refactored the clear options so that the buttons indicate whether we need to clear a few or all
+- [Python] Sectioned off the docxBuilder function to support micro-servicing
+- [Python-GUI] Sectioned off the code into component functions for readability and reusability's sake.
+- [Python-Backend] Capitalised the SUCCESS and FAILURE parts of the relevant print statements.
 
-# [p.0.3] 'Attack of the dot ini'
+### Fixed
+- [Python] An error in the set_invoice_number function which did not allow it to update the invoice number
+- [Python-Backend] An error that in the multi-functionality with GUI. Lack of functionality for it, plus I forgot lists are 0-indexed.
+
+### Removed
+- [Java] Any hope of a java version
+
+## [p.0.3] 'Attack of the dot ini'
 ### Added
 - [Python] Support for configuration file
 - [Python] Added an os check to ensure a config file
@@ -32,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Python] Dependence on a bodge-y docx file for invoice storage
 - [Python] Remove the second ask or the 'Are you Sure' from the initial request
 
-# [p.0.2] 'Rise of the Lists'
+## [p.0.2] 'Rise of the Lists'
 ### Added
 - [Python] Support for multi-item functionality.
 
@@ -58,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - [Python] Removed support for automatic command line variable assignage
 
+# The non purely python path
 ## [0.0.8] 'Connection achieved !'
 ### Added
 - [Java] GUI forwarding of input to the CLI

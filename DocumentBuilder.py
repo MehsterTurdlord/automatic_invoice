@@ -1,4 +1,3 @@
-from docx import Document
 from datetime import datetime
 from pprint import pprint
 import configparser
@@ -37,14 +36,13 @@ def get_invoice_number():
     try:
         cfg = configparser.ConfigParser();
         cfg.read("config.ini");
-        invoice_no = cfg.get("Section_1", "invoice");
-        invoice_no = str( (int(invoice_no) + 1 ));
+        invoice_no = str( ( int( cfg.get("Section_1", "invoice") ) + 1 ) );
 
         print(invoice_no);
-        print("Success ! Got Invoice #.");
+        print("SUCCESS ! Got Invoice #.");
   
     except:
-        print("Failure ! Did not get Invoice #.");
+        print("FAILURE ! Did not get Invoice #.");
 
     return invoice_no
 
@@ -67,84 +65,20 @@ def set_invoice_number(invoice_no):
     None
     '''
 
-    try:
+    try:    
         cfg = configparser.ConfigParser();
-        cfg.set("Section_1", "invoice", invoice_no);
+        cfg.read("config.ini");
+        invoice = cfg["Section_1"];
+        invoice["invoice"] = str(invoice_no);
 
-        cfg = open("config.ini", 'w');
-        cfg.write(cfg);
-        cfg.close();
+        with open("config.ini", "w") as cfgfile:
+            cfg.write(cfgfile);
 
-        print("Success ! Set Invoice #.")
+        print("SUCCESS ! Set Invoice #.")
 
     except:
-        print("Failure ! Did not set Invoice #.");
-
-    return None
-
-
-def build_invoice(values):
-    """
-    Either this or the main should be the one that builds the invoice.
-
-    Parameters
-    -------
-    values: Dict
-        'cNam': str, 'cTel': int, 'cPer': str,  
-        'cTRN': int, 'dInv': int, 'products': list,
-        'totalValues': float, 'totalWords: str
-
-    products: list
-        'pDes': str, 'pQua': float, 'pCos': float, 
-        'base': float, 'VAT': float, 'total': float
-
-    Returns
-    -------
-    None
-    """
-
-    doc = Document('original_file.docx')
-
-    
-    doc.paragraphs[7].text       = 'Company name: '   + values['cNam']
-    doc.tables[0].cell(0,0).text = 'TELEPHONE NO: '   + values['cTel']
-    doc.tables[0].cell(1,0).text = 'CONTACT PERSON: ' + values['cPer']
-    doc.tables[0].cell(2,0).text = 'CUSTOMER TRN: '   + values['cTRN']
-    doc.tables[0].cell(0,1).text = 'INVOICE No: '     + values['dInv']
-    doc.tables[0].cell(1,1).text = 'DATE: '           + values['date']
-
-    #TODO: Fix the pQua in this for loop properly.
-    for n in range(1, len( values['products']) + 1 ):
-        doc.tables[1].cell(n,0).text = str(n)
-        doc.tables[1].cell(n,2).text = values['products'][n-1]['pDes'];
-        doc.tables[1].cell(n,3).text = str(int(values['products'][n-1]['pQua']));
-        doc.tables[1].cell(n,4).text = values['products'][n-1]['base'][0];
-        doc.tables[1].cell(n,5).text = values['products'][n-1]['base'][1];
-        doc.tables[1].cell(n,6).text = values['products'][n-1]['VAT'][0];
-        doc.tables[1].cell(n,7).text = values['products'][n-1]['VAT'][1];
-        doc.tables[1].cell(n,8).text = values['products'][n-1]['total'][0];
-        doc.tables[1].cell(n,9).text = values['products'][n-1]['total'][1];
-
-    # The total base price
-    doc.tables[1].cell(9,8).text  = 'AED: ' + values['totalValues'][0]['base'][0]
-    doc.tables[1].cell(9,9).text  = values['totalValues'][0]['base'][1]
-    
-    # The total VAT price
-    doc.tables[1].cell(10,8).text = 'AED: ' + values['totalValues'][0]['VAT'][0]
-    doc.tables[1].cell(10,9).text = values['totalValues'][0]['VAT'][1]
-
-    # The total total price    
-    doc.tables[1].cell(11,8).text = 'AED: ' + values['totalValues'][0]['total'][0]
-    doc.tables[1].cell(11,9).text = values['totalValues'][0]['total'][1]
-
-    # The total total in words
-    doc.tables[1].cell(12,0).text = values['totalWords'] 
-
-    # Saving
-    doc.save(values['dInv'] + ' ' + values['cNam'] + '.docx')
-
-    print("Success ! Created invoice !")
-    
+        print("FAILURE ! Did not Set Invoice #.")
+   
     return None
 
 
@@ -329,10 +263,6 @@ def get_date():
     return datetime.today().date().strftime('%B %d %Y');
 
 
-def get_values():
-    """Gets the values from the CLI."""
-    
-
 def main(GUIDetails = None):
     """
     First, input and get_invoice_number().
@@ -382,29 +312,32 @@ def main(GUIDetails = None):
     dInv = get_invoice_number()
     products = []
 
-    # Depreciate this.
     try:
         cNam = str( GUIDetails[0] );
         cTel = str( GUIDetails[1] );
         cPer = str( GUIDetails[2] );
         cTRN = str( GUIDetails[3] );
-        
-        for n in range(4, len(GUIDetails) + 1 ):
+        print("SUCCESS ! Received customer details from the GUI.");
+
+        for i in range(0, ( int((len(GUIDetails) - 4) // 3 )) ):
             h = {}
 
-            h['pDes'] = str(   GUIDetails[n][0] );
-            h['pQua'] = float( GUIDetails[n][1] );
-            h['pCos'] = float( GUIDetails[n][2] );
-
+            h['pDes'] = str(   GUIDetails[ 4 + ( i * 3 ) ] );
+            h['pQua'] = float( GUIDetails[ 5 + ( i * 3 ) ] );
+            h['pCos'] = float( GUIDetails[ 6 + ( i * 3 ) ] );
+            
             products.append(h);
+
+        print("SUCCESS ! Received product details from the GUI.")
     
     except:   
+
         cNam = str( input( 'What is the CUSTOMER\'S COMPANY NAME ? ' ) or 'University of Wollongong in Dubai')
         cTel = str( input( 'What is the CUSTOMER\'S TELEPHONE # ? '  ) or '971-56-1322345'                   )
         cPer = str( input( 'Who is the CONTACT PERSON ? '            ) or 'Mr Wollongong'                    )
         cTRN = str( input( 'What is the CUSTOMER\'S TRN ? '          ) or '12381239018'                      )
 
-        print("Success ! Received customer details.")
+        print("SUCCESS ! Received customer details from the CLI.")
 
         while True:
             h = {}
@@ -414,12 +347,10 @@ def main(GUIDetails = None):
 
             products.append(h);
             
-            if   str( input( 'No more products ? (Y/N)' ) or 'N' ).upper().split()[0] == 'Y':
+            if str( input( 'Are there more products ? (Y/N)' ) or 'N' ).upper().split()[0] == 'Y':
                 break;
-            else:
-                continue;
 
-        print("Success ! Received product details.")
+        print("SUCCESS ! Received product details from the CLI.")
 
     
     print('Calculating values...')
@@ -454,7 +385,17 @@ def main(GUIDetails = None):
     values['date'] = get_date()
 
     print('Building invoices...')
-    build_invoice(values)
+
+    if (os.path.isfile('original_file.docx') is True):
+        print('... in docx')
+        from docxBuilder import build_invoice
+        build_invoice(values)
+
+    else:
+        print('... in odt')
+        #TODO: Add odt functionality
+        #from odtBuilder import build_invoice
+        #build_invoice(values)
 
     print('Setting invoice number...');
     set_invoice_number(dInv);
